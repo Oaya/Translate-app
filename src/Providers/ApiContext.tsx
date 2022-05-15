@@ -8,6 +8,11 @@ interface ApiProviderProps {
 interface ProviderData {
 
 }
+interface LanguagesObj {
+  label: string;
+  value: string;
+
+}
 
 export const ApiContext = createContext<ProviderData | null>(null);
 
@@ -22,7 +27,7 @@ const openai = new OpenAIApi(config);
 export default function ApiProvider({ children }: ApiProviderProps) {
   const [responses, setResponses] = useState([]);
 
-  const getApiResponse = (query, languages) => {
+  const getApiResponse = (query: string, languages: LanguagesObj[]) => {
     const langString = languages?.map(({ value }) => value).join(' and ')
     console.log(langString)
 
@@ -50,12 +55,12 @@ export default function ApiProvider({ children }: ApiProviderProps) {
     }
   };
 
+
+
   const providerData = {
     responses,
     getApiResponse
   };
-
-
 
   return (
     <ApiContext.Provider value={providerData}>

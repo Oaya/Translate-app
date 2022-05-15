@@ -15,7 +15,7 @@ const languagesListObj: LanguagesObj[] = languagesList.map(lang => ({ label: lan
 
 export default function Form() {
   const { getApiResponse } = useContext(ApiContext);
-  const queryInputRef = useRef<HTMLTextAreaElement | null>(null);
+  const queryInputRef = useRef<HTMLTextAreaElement>(null);
   const [typedLang, setTypedLang] = useState<ValueType<LanguagesObj, string[]>>('')
 
   const { error,
@@ -36,7 +36,9 @@ export default function Form() {
     //search function from context//
     const enteredInput = queryInputRef.current?.value;
     getApiResponse(enteredInput, typedLang);
-    queryInputRef.current.value = '';
+    if (queryInputRef.current) {
+      queryInputRef.current.value = '';
+    }
     setTypedLang('')
   }
 
@@ -61,7 +63,6 @@ export default function Form() {
           value={typedLang}
           placeholder="Select from list or type in here"
         />
-
       </div>
 
       <div>
