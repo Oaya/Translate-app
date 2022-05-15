@@ -1,13 +1,27 @@
 import React, { RefObject, useContext, useRef, useState } from 'react';
 import useSpeechToText from 'react-hook-speech-to-text';
+import Creatable, { ValueType } from 'react-select/creatable';
 
 import { ApiContext } from '../Providers/ApiContext';
+import { languagesList } from '../languageData';
 
+
+interface GroupBase<Option> {
+  readonly options: readonly Option[];
+  readonly label?: string;
+}
+
+interface LanguagesObj {
+  label: string;
+  value: string;
+};
+
+const languagesListObj: LanguagesObj[] = languagesList.map(lang => ({ label: lang, value: lang }));
 
 export default function Form() {
-
+  const { getApiResponse } = useContext(ApiContext);
   const queryInputRef = useRef<HTMLTextAreaElement | null>(null);
-
+  const [typedLang, setTypedLang] = useState<ValueType<LanguagesObj, true>>('')
 
   const { error,
     interimResult,
@@ -22,14 +36,18 @@ export default function Form() {
       }
     });
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement | null>) => {
     e.preventDefault();
     //search function from context//
     const enteredInput = queryInputRef.current?.value;
-
+    getApiResponse(enteredInput, typedLang);
+    queryInputRef.current.value = '';
+    setTypedLang('')
   }
 
-
+  const handleChange = (input) => {
+    setTypedLang(input)
+  }
 
 
   //for the case speech to text doesn't work//
@@ -41,8 +59,13 @@ export default function Form() {
     <div>
       <div>
         <p>What languages do you want to translate to??</p>
-
-
+        <Creatable
+          isMulti
+          options={languagesListObj}
+          onChange={handleChange}
+          value={typedLang}
+          placeholder="Select from list or type in here"
+        />
 
       </div>
 
@@ -56,7 +79,7 @@ export default function Form() {
       </div>
 
       <form onSubmit={handleSubmit}>
-        <textarea ref={queryInputRef} />
+        <textarea ref={queryInputRef} value={interimResult} />
         <button>Translate</button>
       </form>
     </div>

@@ -52,7 +52,7 @@ export default function ApiProvider({ children }: ApiProviderProps) {
 
   const providerData = {
     responses,
-    get
+    getApiResponse
   };
 
 
