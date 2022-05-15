@@ -1,15 +1,10 @@
-import React, { RefObject, useContext, useRef, useState } from 'react';
+import React, { useContext, useRef, useState } from 'react';
 import useSpeechToText from 'react-hook-speech-to-text';
 import Creatable, { ValueType } from 'react-select/creatable';
 
 import { ApiContext } from '../Providers/ApiContext';
 import { languagesList } from '../languageData';
 
-
-interface GroupBase<Option> {
-  readonly options: readonly Option[];
-  readonly label?: string;
-}
 
 interface LanguagesObj {
   label: string;
@@ -21,7 +16,7 @@ const languagesListObj: LanguagesObj[] = languagesList.map(lang => ({ label: lan
 export default function Form() {
   const { getApiResponse } = useContext(ApiContext);
   const queryInputRef = useRef<HTMLTextAreaElement | null>(null);
-  const [typedLang, setTypedLang] = useState<ValueType<LanguagesObj, true>>('')
+  const [typedLang, setTypedLang] = useState<ValueType<LanguagesObj, string[]>>('')
 
   const { error,
     interimResult,
@@ -45,7 +40,7 @@ export default function Form() {
     setTypedLang('')
   }
 
-  const handleChange = (input) => {
+  const handleChange = (input: ValueType<LanguagesObj>) => {
     setTypedLang(input)
   }
 
