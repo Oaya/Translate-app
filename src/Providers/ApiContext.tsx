@@ -30,8 +30,7 @@ export default function ApiProvider({ children }: ApiProviderProps) {
   const getApiResponse = (query: string, languages: LanguagesObj[]) => {
     const langString = languages?.map(({ value }) => value).join(' and ')
     console.log(langString)
-
-    let prompt = `Translate this into ${langString}: \n${query}\n`;
+    let prompt = `Translase this into ${langString}: \n${query}\n`;
     console.log(prompt);
 
     if (query && languages) {
@@ -42,8 +41,11 @@ export default function ApiProvider({ children }: ApiProviderProps) {
         top_p: 1.0,
         frequency_penalty: 0.0,
         presence_penalty: 0.0,
-      }).then(res => {
-        const response = res.data.choices[0].text;
+      }).then((res) => {
+        if (res) {
+          const response = res.data.choices[0].text;
+        }
+
         const obj = { prompt: query, response: response }
         setResponses((prev) => {
           return [...prev, obj]
