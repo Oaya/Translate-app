@@ -2,7 +2,7 @@ import React, { useContext, useRef, useState } from 'react';
 import useSpeechToText from 'react-hook-speech-to-text';
 import Creatable, { ValueType } from 'react-select/creatable';
 
-import { ApiContext } from '../Providers/ApiContext';
+import { ApiContext, ProviderDataType } from '../Providers/ApiContext';
 import { languagesList } from '../languageData';
 
 
@@ -14,7 +14,7 @@ interface LanguagesObj {
 const languagesListObj: LanguagesObj[] = languagesList.map(lang => ({ label: lang, value: lang }));
 
 export default function Form() {
-  const { getApiResponse } = useContext(ApiContext);
+  const { getApiResponse } = useContext(ApiContext) as ProviderDataType;
   const queryInputRef = useRef<HTMLTextAreaElement>(null);
   const [typedLang, setTypedLang] = useState<ValueType<LanguagesObj, string[]>>('')
 
@@ -35,7 +35,9 @@ export default function Form() {
     e.preventDefault();
     //search function from context//
     const enteredInput = queryInputRef.current?.value;
-    getApiResponse(enteredInput, typedLang);
+    if (enteredInput) {
+      getApiResponse(enteredInput, typedLang);
+    }
     if (queryInputRef.current) {
       queryInputRef.current.value = '';
     }
